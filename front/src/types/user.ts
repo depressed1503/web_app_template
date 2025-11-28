@@ -3,6 +3,7 @@ export type User = {
   email: string
   first_name: string
   last_name: string
+  middle_name: string
 
   is_staff: boolean
   is_superuser: boolean

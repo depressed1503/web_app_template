@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .serializers import LoginSerializer, UserSerializer, RegistrationSerializer
+from .serializers import LoginSerializer, ProfileSerializer, UserSerializer, RegistrationSerializer
 
 
 class GetCSRF(APIView):
@@ -58,12 +58,23 @@ class LogoutView(APIView):
         logout(request)
         return Response({"detail": "logged out"})
 
-
-class MeView(APIView):
+class ProfileView(APIView):
     """
-    Текущий пользователь
+    GET — возвращает профиль
+    PUT — обновляет профиль
     """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response(UserSerializer(request.user).data)
+        serializer = ProfileSerializer(request.user)
+        return Response(serializer.data)
+
+    def put(self, request):
+        serializer = ProfileSerializer(
+            request.user, 
+            data=request.data, 
+            partial=True  # можно обновлять частично
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -14,7 +14,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
 }
 
-export const fetchMe = createAsyncThunk("auth/me", async () => {
+export const fetchMe = createAsyncThunk("auth/profile", async () => {
   return await authApi.me()
 })
 

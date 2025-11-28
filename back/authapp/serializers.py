@@ -1,11 +1,14 @@
 from django.contrib.auth import authenticate
-from .models import CustomUser
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
+        model = User
         fields = ["id", "username", "email", "first_name", "last_name"]
 
 
@@ -31,9 +34,25 @@ class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ("first_name", "last_name", "middle_name", "email", "password")
 
     def create(self, validated_data):
         validated_data["password"] = make_password(validated_data["password"])
-        return CustomUser.objects.create(**validated_data)
+        return User.objects.create(**validated_data)
+    
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "last_name",
+            "first_name",
+            "middle_name",
+            "email",
+        )
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance

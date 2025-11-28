@@ -3,6 +3,7 @@ import HomePage from "@/pages/HomePage"
 import LoginPage from "@/pages/LoginPage"
 import { ProtectedRoute } from "@/router/protected"
 import RegistrationPage from "@/pages/RegistrationPage"
+import ProfilePage from "@/pages/ProfilePage"
 
 const rootRoute = new RootRoute()
 
@@ -24,6 +25,12 @@ const protectedRoute = new Route({
   component: ProtectedRoute,
 })
 
+const profileRoute = new Route({
+  getParentRoute: () => protectedRoute,
+  path: "/profile",
+  component: ProfilePage,
+})
+
 const homeRoute = new Route({
   getParentRoute: () => protectedRoute,
   path: "/",
@@ -33,7 +40,7 @@ const homeRoute = new Route({
 const routeTree = rootRoute.addChildren([
   loginRoute,
   registerRoute,
-  protectedRoute.addChildren([homeRoute]),
+  protectedRoute.addChildren([homeRoute, profileRoute]),
 ])
 
 export const router = createRouter({ routeTree })
