@@ -12,7 +12,7 @@ export default defineConfig([
     files: ['vite.config.ts', 'eslint.config.js', 'postcss.config.js'],
     languageOptions: {
       parserOptions: {
-        project: null, // 👈 ключевой момент
+        project: null,
       },
     },
   },
@@ -33,17 +33,15 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
-      parser: tseslint.parser, // важно для flat-config
+      parser: tseslint.parser,
       parserOptions: {
         project: ['./tsconfig.json'],
       },
     },
 
     rules: {
-      // ✔ отключаем точки с запятой
       semi: ['error', 'never'],
 
-      // ✔ prettier без ";" (иначе ESLint и Prettier конфликтуют)
       'prettier/prettier': ['error', { semi: false }],
     },
   },
