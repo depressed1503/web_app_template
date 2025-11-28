@@ -13,3 +13,8 @@ class CustomUser(AbstractUser):
         related_name='custom_users',
         blank=True,
     )
+    username = None   # обязательно
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["first_name", "last_name"]
+    email = models.EmailField(unique=True, verbose_name="Почта")
+    middle_name = models.CharField(default='', max_length=255, verbose_name='Отчество')

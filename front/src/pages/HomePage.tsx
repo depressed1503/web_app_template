@@ -7,7 +7,9 @@ export default function HomePage() {
 
   return (
     <div style={{ padding: 40 }}>
-      <h1>Привет, {user?.username}</h1>
+      <h1>
+        Привет, {user?.last_name} {user?.first_name}
+      </h1>
       <button onClick={logout}>Logout</button>
     </div>
   )

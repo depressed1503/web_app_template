@@ -3,8 +3,8 @@ from django.middleware.csrf import get_token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-
-from .serializers import LoginSerializer, UserSerializer
+from rest_framework import status
+from .serializers import LoginSerializer, UserSerializer, RegistrationSerializer
 
 
 class GetCSRF(APIView):
@@ -27,6 +27,28 @@ class LoginView(APIView):
         login(request, user)
         return Response({"detail": "ok", "user": UserSerializer(user).data})
 
+
+class RegistrationView(APIView):
+    """
+    Регистрация пользователя.
+    Поля: f, i, o, email, password
+    После регистрации — сразу логин.
+    """
+
+    def post(self, request):
+        serializer = RegistrationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.save()  # создание пользователя
+        login(request, user)      # логиним сразу после регистрации
+
+        return Response(
+            {
+                "detail": "ok",
+                "user": UserSerializer(user).data
+            },
+            status=status.HTTP_201_CREATED
+        )
 
 class LogoutView(APIView):
     """

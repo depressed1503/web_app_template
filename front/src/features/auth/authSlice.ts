@@ -30,6 +30,20 @@ export const logoutThunk = createAsyncThunk("auth/logout", async () => {
   return await authApi.logout()
 })
 
+export const registerThunk = createAsyncThunk(
+  "auth/register",
+  async (data: {
+    last_name: string
+    first_name: string
+    middle_name: string
+    email: string
+    password: string
+  }) => {
+    await authApi.getCSRF()
+    return await authApi.register(data)
+  },
+)
+
 const slice = createSlice({
   name: "auth",
   initialState,
@@ -50,6 +64,11 @@ const slice = createSlice({
       .addCase(logoutThunk.fulfilled, (state) => {
         state.user = null
         state.isAuthenticated = false
+      })
+
+      .addCase(registerThunk.fulfilled, (state, action) => {
+        state.user = action.payload.user
+        state.isAuthenticated = true
       })
   },
 })
